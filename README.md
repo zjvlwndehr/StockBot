@@ -9,7 +9,7 @@
 <h2>now_samsung, ns: show now samsung stock price</h2>
 <h2>tomorrow_samsung, next_samsung, ts: show tomorrow samsung stock price</h2>
 
-![header](https://capsule-render.vercel.app/api?text=Hello%World!&fontSize=20&rotate=-30%type=slice)
+![header](https://capsule-render.vercel.app/api?text=Hello%World!&fontSize=20&rotate=-30&type=slice)
 ![reversal](https://capsule-render.vercel.app/api?text=Now,%20Have%20Fun%20With%20Bot!&type=slice&fontColor=#FF5675)
 &fontColor=#FF5675
 fontSize=70&
