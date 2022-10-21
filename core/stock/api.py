@@ -8,9 +8,9 @@ class deposit():
         import os
         from datetime import datetime as dtm
         try:
-            print(f'[INFO] Searching for USER=[{id}] data...')
-            os.path.exists(f'./core/stock/data/{str(id)}/log{id}.csv')
-            df = pd.read_csv(f'./core/stock/data/{str(id)}/log{id}.csv')
+            print(f'[INFO] Searching for USER=[{str(id)}] data...')
+            os.path.exists(f'./core/stock/data/{str(id)}/log{str(id)}.csv')
+            df = pd.read_csv(f'./core/stock/data/{str(id)}/log{str(id)}.csv')
             self.__tmp = []
             self.__id = df['Id'].values[-1]
             self.__cash = df['Cash'].values[-1]
@@ -41,7 +41,8 @@ class deposit():
             self.show()
         except:
             print('[ERROR]: Failed to show your data.')
-    def show(self):
+
+    def show(self)->None:
         print(f'[INFO]: Showing your(USER=[{self.__id}]) data.')
         import pandas as pd
         from datetime import datetime as dtm
@@ -49,12 +50,11 @@ class deposit():
         df = pd.DataFrame(csv)
         print(f'\n{df.to_string(index=False)}\n')
 
-    def Protector(func):
+    def Protector(func)->None:
         def wrapper(*args, **kwargs):
             from datetime import datetime as dtm
             import pandas as pd
             self = args[0]
-            print(self)
             print(f'[INFO]: Protector create [tmp{self.__id}.csv] about <{func.__name__}>')
             tmp = [{'Date':dtm.now().strftime("%Y-%m-%d-%H:%M:%S"),'Id':self.__id, 'Cash':self.__cash, 'Count':self.__count, 'Stock':self.__stock, 'transaction':func.__name__}]
             if func.__name__ == 'deposit':
@@ -71,10 +71,9 @@ class deposit():
                 df = pd.DataFrame(tmp)
                 df.to_csv(f, index=False, header=True)
             func(*args, **kwargs)
-
         return wrapper
 
-    def logger(self):
+    def logger(self)->None:
         import pandas as pd
         from datetime import datetime as dtm
         csv = [{'Date':dtm.now().strftime("%Y-%m-%d-%H:%M:%S"),'Id':self.__id, 'Cash':self.__cash, 'Count':self.__count, 'Stock':self.__stock}]
@@ -87,38 +86,50 @@ class deposit():
         except:
             print(f'[ERROR]: Logger failed to save your(USER=[{self.__id}]) data.')
             print(f'[ERROR]: Your transaction is not saved.')
-    
-  
 
     @Protector
-    def deposit(self, amount):
-        # self.__tmp.append(self.__cash)
-        self.__cash += amount
-        self.logger()
+    def deposit(self, amount :int):
+        if amount > 0 and type(amount) == int:
+            self.__cash += amount
+            self.logger()
+        else:
+            print('[ERROR]: Invalid argument.')
 
     @Protector
-    def withdraw(self, amount):
-        self.__tmp = self.__cash
-        self.__cash -= amount
-        self.logger()
+    def withdraw(self, amount :int)->None:
+        if amount > 0 and self.__cash - amount >= 0 and type(amount) == int:
+            self.__cash -= amount
+            self.logger()
+        else:
+            print('[ERROR]: Invalid argument. You can not withdraw this cash.')
     
     @Protector
-    def stock_buy(self, amount):
-        self.__tmp = self.__cash
-        self.__count += amount
+    def stock_buy(self, amount :int)->None:
         price = self.now_samsung()
-        self.__tmp = self.__cash
-        self.__cash -= amount * price
-        print(f'sell {amount} stock at {price}')
-        self.logger()
+        if amount > 0 and type(amount) == int:
+            if self.__cash  - amount * price >= 0:
+                self.__count += amount
+                self.__cash -= amount * price
+                print(f'[DEPOSIT]: Buy {amount} stock at {price} KRW')
+                self.logger()
+            else:
+                print('[ERROR]: Not enough cash.')
+        else:
+            print('[ERROR]: You can not buy this amount.')
     
     @Protector
-    def stock_sell(self, amount):
-        self.__count -= amount
-        price = self.now_samsung()
-        self.__cash += amount * price
-        print(f'sell {amount} stock at {price}')
-        self.logger()
+    def stock_sell(self, amount :int)->None:
+        if amount > 0 and type(amount) == int:
+            if self.__count - amount >= 0:
+                self.__count -= amount
+                price = self.now_samsung()
+                self.__cash += amount * price
+                print(f'[DEPOSIT]: Sell {amount} stock at {price} KRW')
+                self.logger()
+            else:
+                print('[ERROR]: Invalid Argument. Not enough stock.')
+        else:
+            print('[ERROR]: Invalid Argument. You can not sell this amount.')
     
     def now_samsung(self)->int:
         from cfscrape import create_scraper as cs
@@ -135,14 +146,12 @@ class deposit():
 class ai():
     def __init__(self) -> None:
         pass        
-    ######### NA #########
     def update_csv_samsung(self)->None:
         from cfscrape import create_scraper as cs
         import pandas as pd
         from datetime import datetime as dtm
         try:
             print('[INFO]: Updating csv.')
-            # print(f"https://query1.finance.yahoo.com/v7/finance/download/005930.KS?period1=1508457600&period2={str(int(dtm.now(tz=None).timestamp()))}&interval=1d&events=history&includeAdjustedClose=true")
             r = cs().get(f"https://query1.finance.yahoo.com/v7/finance/download/005930.KS?period1=1508457600&period2={str(int(dtm.now(tz=None).timestamp()))}&interval=1d&events=history&includeAdjustedClose=true")
             with open(f'./core/model/data/samsung{dtm.now().strftime("%Y-%m-%d")}.csv', 'wb') as f:
                 f.write(r.content)
@@ -257,117 +266,11 @@ class ai():
             print("[SUCCESS]: Model updated.")
         return None
         
-
-
-    def predict(self):
-        from keras.layers import Activation, Dense, Dropout, LSTM
-        from keras.callbacks import ModelCheckpoint
-        from keras.models import Sequential, load_model
-        import matplotlib.pyplot as plt
-        import pandas as pd
-        import numpy as np
-        import datetime
-        import os
-
-        data = pd.read_csv('E:/Development/AI/StockBot/core/model/data/s.csv')
-        high = data['High'].values
-        low = data['Low'].values
-        mid = (high + low) / 2
-
-        Checkpoint = ModelCheckpoint(
-            f'E:/Development/AI/StockBot/core/model/model/{datetime.datetime.now().strftime("%Y-%m-%d")}.h5',
-            monitor='val_loss',
-            verbose=1,
-            save_best_only=True,
-        )
-
-        ######### create window #########
-
-        seq_len = 50
-        sequence_length = seq_len + 1
-
-        result = []
-        for index in range(len(mid) - sequence_length):
-            result.append(mid[index: index + sequence_length])
-
-        ######### normalize #########
-
-        normalized = []
-        for window in result:
-            normalized_window = [((float(p) / float(window[0])) - 1) for p in window] # normalize: first value is 0 as standard value
-            normalized.append(normalized_window)
-
-        result = np.array(normalized)
-        ######### split train/test #########
-
-        row = int(round(result.shape[0] * 0.9))
-        train = result[:row, :]
-        np.random.shuffle(train)
-
-        x_train = train[:, :-1]
-        x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
-        y_train = train[:, -1]
-
-        x_test = result[row:, :-1]
-        x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
-        y_test = result[row:, -1]
-
-        model = Sequential()
-
-        try:
-            model = load_model(f'E:/Development/AI/StockBot/core/model/model/{datetime.datetime.now().strftime("%Y-%m-%d")}.h5')
-        except:
-            ######### build LSTM model #########
-            model.add(LSTM(50, return_sequences=True, input_shape=(50, 1)))
-            model.add(Dropout(0.2))
-            model.add(LSTM(100, return_sequences=False))
-            model.add(Dropout(0.2))
-            model.add(Dense(1, activation='linear'))
-
-            model.compile(loss='mse', optimizer='rmsprop')
-
-            ######### train model #########
-
-            model.fit(
-                x_train,
-                y_train,
-                validation_data=(x_test, y_test),
-                batch_size=10,
-                epochs=20,
-                callbacks=[Checkpoint]
-            )
-
-        ######### predict #########
-
-        print('x_test.shape: ', x_test.shape)
-        print('x_test[0].shape: ', x_test[0].shape)
-        print('x_test[0]: ', x_test[0])
-        pred = model.predict(x_test)
-        std = mid[-sequence_length]
-        print('std: ', std)
-        plt.plot((1+pred)*std, color='red', label='Prediction')
-        # plt.plot(y_test, color='blue', label='Ground Truth')
-        # plt.plot(y_test * (high[row + seq_len] - low[row + seq_len]) + low[row + seq_len], color='blue', label='Ground Truth')
-        plt.legend(loc='best')
-        plt.show()
-
-        ######### save as image #########
-
-        try:
-            os.mkdir(f'E:/Development/AI/StockBot/image')
-        except:
-            pass
-        finally:
-            pass
-        # plt.savefig(f'E:/Development/AI/StockBot/image/test.png')
-        plt.savefig(f'E:/Development/AI/StockBot/image/{datetime.datetime.now().strftime("%Y-%m-%d")}.png')
-
 class stock():
     def __init__(self) -> None:
         pass
     
     def now_samsung(self)->int:
-        # from requests import get
         from cfscrape import create_scraper as cs
         from datetime import datetime as dtm
         from bs4 import BeautifulSoup

@@ -1,2 +1,2 @@
-Date,Id,Cash,Count,Stock,transaction,2
-2022-10-21-20:02:57,0,1000000,0,samsumg electronics,deposit,1000
+Date,Id,Cash,Count,Stock,transaction,3
+2022-10-21-20:52:57,0,946200,1,samsumg electronics,stock_sell,1
