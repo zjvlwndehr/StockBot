@@ -10,4 +10,6 @@
 <h2>tomorrow_samsung, next_samsung, ts: show tomorrow samsung stock price</h2>
 
 
-![reversal](https://capsule-render.vercel.app/api?text=Now,%20Have%20Fun%20With%20Bot!&fontSize=70&fontColor=#FF5675&type=slice)
+![reversal](https://capsule-render.vercel.app/api?text=Now,%20Have%20Fun%20With%20Bot!&fontColor=#FF5675&type=slice)
+fontSize=70&
+&reversal=true&color=gradient&type=slice
