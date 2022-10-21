@@ -5,4 +5,5 @@ d = deposit(1)
 a = ai()
 s = stock()
 
-print(a.tomorrow_samsung())
+# print(a.tomorrow_samsung())
+a.update_model_samsung()
