@@ -10,4 +10,4 @@
 <h2>now_samsung, ns: show now samsung stock price</h2>
 <h2>tomorrow_samsung, next_samsung, ts: show tomorrow samsung stock price</h2>
 
-![footer](https://capsule-render.vercel.app/api?type=wave&color=auto&height=200&section=footer&text=Now,%20Have%20Fun%20With%20This%20Bot!&fontSize=90)
+![footer](https://capsule-render.vercel.app/api?type=wave&color=auto&height=200&section=footer&text=Now,%20Have%20Fun%20With%20Bot!&fontSize=70)
