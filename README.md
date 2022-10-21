@@ -1,6 +1,6 @@
 ![header](https://capsule-render.vercel.app/api?type=waving&color=auto&height=300&section=header&text=Stock%20Bot&fontSize=90&animation=fadeIn&fontAlignY=38&desc=[WARNING]%20Just%20For%20Fun.&descAlignY=51&descAlign=62)
 
-# <center>Stock Bot</center>
+<center>Stock Bot</center>
 <br>
 
 
