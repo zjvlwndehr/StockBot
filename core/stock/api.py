@@ -2,9 +2,6 @@
 stock bot api
 '''
 
-from joblib import PrintTime
-
-
 class deposit():
     def __init__(self, id) -> None:
         import pandas as pd
@@ -14,11 +11,12 @@ class deposit():
             print(f'[INFO] Searching for USER=[{id}] data...')
             os.path.exists(f'./core/stock/data/{str(id)}/log{id}.csv')
             df = pd.read_csv(f'./core/stock/data/{str(id)}/log{id}.csv')
-            self.__cash = df['Cash'][-1]
-            self.__tmp = 0
-            self.__count = df['Count'][-1]
-            self.__stock = df['Stock'][-1]
-            self.__count = df['Count'][-1] 
+            self.__tmp = []
+            self.__id = df['Id'].values[-1]
+            self.__cash = df['Cash'].values[-1]
+            self.__count = df['Count'].values[-1]
+            self.__stock = df['Stock'].values[-1]
+            # csv = [{'Date':dtm.now().strftime("%Y-%m-%d-%H:%M:%S"),'Id':id, 'Cash':self.__cash, 'Count':self.__count, 'Stock':self.__stock}]
             print(f'[INFO] USER=[{id}] data found!')
         except:
             print('[INFO]: No data.')
@@ -36,12 +34,44 @@ class deposit():
                 df = pd.DataFrame([{'Date':dtm.now().strftime("%Y-%m-%d-%H:%M:%S"),'Id':self.__id, 'Cash':self.__cash, 'Count':self.__count, 'Stock':self.__stock}])
                 df.to_csv(f'./core/stock/data/{str(id)}/log{id}.csv', index=False, header=True)
             except:
-                pass
-    def decorator(self, func):
+                print('[ERROR]: Failed to create log file.')
+            pass
+        
+        try:
+            self.show()
+        except:
+            print('[ERROR]: Failed to show your data.')
+    def show(self):
+        print(f'[INFO]: Showing your(USER=[{self.__id}]) data.')
+        import pandas as pd
+        from datetime import datetime as dtm
+        csv = [{'Date':dtm.now().strftime("%Y-%m-%d-%H:%M:%S"),'Id':self.__id, 'Cash':self.__cash, 'Count':self.__count, 'Stock':self.__stock}]
+        df = pd.DataFrame(csv)
+        print(f'\n{df.to_string(index=False)}\n')
+
+    def Protector(func):
         def wrapper(*args, **kwargs):
-            print(f'[INFO]: {func.__name__} is running...')
+            from datetime import datetime as dtm
+            import pandas as pd
+            self = args[0]
+            print(self)
+            print(f'[INFO]: Protector create [tmp{self.__id}.csv] about <{func.__name__}>')
+            tmp = [{'Date':dtm.now().strftime("%Y-%m-%d-%H:%M:%S"),'Id':self.__id, 'Cash':self.__cash, 'Count':self.__count, 'Stock':self.__stock, 'transaction':func.__name__}]
+            if func.__name__ == 'deposit':
+                tmp[0][2] = args[1]
+            elif func.__name__ == 'withdraw':
+                tmp[0][2] = args[1]
+            elif func.__name__ == 'stock_buy':
+                tmp[0][3] = args[1]
+            elif func.__name__ == 'stock_sell':
+                tmp[0][3] = args[1]
+            else:
+                pass
+            with open(f'./core/stock/data/{self.__id}/tmp{self.__id}.csv', 'w') as f:
+                df = pd.DataFrame(tmp)
+                df.to_csv(f, index=False, header=True)
             func(*args, **kwargs)
-            print(f'[INFO]: {func.__name__} is done.')
+
         return wrapper
 
     def logger(self):
@@ -51,24 +81,28 @@ class deposit():
         df = pd.DataFrame(csv)
         print(f'[INFO]: Logger trying to save your(USER=[{self.__id}]) data.')
         try:
-            print(df)
+            self.show()
             df.to_csv(f'./core/stock/data/{self.__id}/log{self.__id}.csv', mode='a', index=False,header=False)
             print(f'[INFO]: Logger saved your(USER=[{self.__id}]) data.')
         except:
             print(f'[ERROR]: Logger failed to save your(USER=[{self.__id}]) data.')
             print(f'[ERROR]: Your transaction is not saved.')
     
-    @decorator
+  
+
+    @Protector
     def deposit(self, amount):
-        self.__tmp = self.__cash
+        # self.__tmp.append(self.__cash)
         self.__cash += amount
         self.logger()
-    
+
+    @Protector
     def withdraw(self, amount):
         self.__tmp = self.__cash
         self.__cash -= amount
         self.logger()
-
+    
+    @Protector
     def stock_buy(self, amount):
         self.__tmp = self.__cash
         self.__count += amount
@@ -78,6 +112,7 @@ class deposit():
         print(f'sell {amount} stock at {price}')
         self.logger()
     
+    @Protector
     def stock_sell(self, amount):
         self.__count -= amount
         price = self.now_samsung()
