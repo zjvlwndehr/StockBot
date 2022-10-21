@@ -79,21 +79,22 @@ class ai():
         from datetime import datetime as dtm
 
         csv = pd.read_csv(f'E:/Development/AI/StockBot/core/model/data/samsung{dtm.now().strftime("%Y-%m-%d")}.csv')
-        print(csv.tail())
+        # print(csv.tail())
         High = csv['High'].values[::-1][0:50][::-1]
         Low = csv['Low'].values[::-1][0:50][::-1]
         Date = csv['Date'].values[::-1][0:50][::-1]
-        print(f"Date[:5] L {Date[:5]}")
+        # print(f"Date[:5] L {Date[:5]}")
         
         Mid = (High + Low) / 2
-        print(f"Mid[:5] L {Mid[:5]}")
+        # print(f"Mid[:5] L {Mid[:5]}")
         
         std = Mid[0]
-        print(f"std L : {std}   Date : {Date[0]}")
+        # print(f"std L : {std}   Date : {Date[0]}")
         ######### normalize #########
         Mid = np.array([i/Mid[0]-1 for i in Mid])        
-        print(f"Mid(N)[:5] L {Mid[:5]}")
+        # print(f"Mid(N)[:5] L {Mid[:5]}")
         try:
+            # model = load_model(f'E:/Development/AI/StockBot/core/model/model/{dtm.now().strftime("%Y-%m-%d")}.h5')
             model = load_model(f'E:/Development/AI/StockBot/core/model/model/samsung{dtm.now().strftime("%Y-%m-%d")}.h5')
             pred = model.predict(np.array(Mid).reshape(1, 50, 1))
             return self.round(int((pred[0][0]+1)*std))
@@ -109,7 +110,13 @@ class ai():
                 print("[ERROR]: Model update failed. Unknown error.")
                 return 0
         return None
-
+    def update_model_samsung_force(self)->None:
+        from datetime import datetime as dtm
+        import os
+        os.remove(f'E:/Development/AI/StockBot/core/model/model/samsung{dtm.now().strftime("%Y-%m-%d")}.h5')
+        print("[SUCCESS]: Model removed.")
+        self.update_model_samsung()
+    
     def update_model_samsung(self)->None:
         self.update_csv_samsung()
         from keras.layers import Activation, Dense, Dropout, LSTM
@@ -132,7 +139,7 @@ class ai():
             f'E:/Development/AI/StockBot/core/model/model/samsung{dtm.now().strftime("%Y-%m-%d")}.h5',
             monitor='val_loss',
             verbose=1,
-            save_best_only=True,
+            save_best_only=False,
         )
 
         result = []
@@ -146,7 +153,7 @@ class ai():
             normalized.append(normalized_window)
 
         result = np.array(normalized)
-        
+        np.random.shuffle(result)
 
         x_train = result[:, :-1]
         y_train = result[:, -1]
@@ -167,6 +174,7 @@ class ai():
             model.save(f'E:/Development/AI/StockBot/core/model/model/samsung{dtm.now().strftime("%Y-%m-%d")}.h5')
             print("[SUCCESS]: Model updated.")
         return None
+        
 
 
     def predict(self):
