@@ -4,13 +4,13 @@
 <br>
 
 
-## show, s: show your money
-## deposit, d: deposit your money
-## withdraw, w: withdraw your money
-## stock_buy, sb: buy stock
-## stock_sell, ss: sell stock
-## now_samsung, ns: show now samsung stock price
-## tomorrow_samsung, next_samsung, ts: show tomorrow samsung stock price
+## <p>show, s: show your money</p>
+## <p>deposit, d: deposit your money</p>
+## <p>withdraw, w: withdraw your money</p>
+## <p>stock_buy, sb: buy stock</p>
+## <p>stock_sell, ss: sell stock</p>
+## <p>now_samsung, ns: show now samsung stock price</p>
+## <p>tomorrow_samsung, next_samsung, ts: show tomorrow samsung stock price</p>
 
 
 ![footer](https://capsule-render.vercel.app/api?type=waveing&color=auto&height=200&section=footer&text=Now%20Use%20me!&fontSize=90animation=fadeIn&fontAlignY=38)
