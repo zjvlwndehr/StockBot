@@ -1,29 +1,34 @@
 from core.stock.api import *
 
-d = deposit(0)
 a = ai()
+querry = input("id(int or connected_english)> ")
+d = deposit(querry)
+
+print('[INFO]: Hello! If you need help, type help or h')
 
 while(1):
+    querry = ''
     querry = input('>>> ')
     if querry == 'exit' or querry == 'quit' or querry == 'q' or querry == 'e' or querry == 'exit()' or querry == 'quit()' or querry == 'q()' or querry == 'e()': 
         break
-    if querry == 'show' or querry == 's':
+    elif querry == 'help' or querry == 'h':
+        print('[INFO]: Help!\nshow, s: show your money\ndeposit, d: deposit your money\nwithdraw, w: withdraw your money\nstock_buy, sb: buy stock\nstock_sell, ss: sell stock\nnow_samsung, ns: show now samsung stock price\ntomorrow_samsung, next_samsung, ts: show tomorrow samsung stock price')
+    elif querry == 'show' or querry == 's':
         d.show()
-    if querry == 'deposit' or querry == 'd':
+    elif querry == 'deposit' or querry == 'd':
         querry = int(input('howmuch> '))
         d.deposit(querry)
-    if querry == 'withdraw' or querry == 'w':
+    elif querry == 'withdraw' or querry == 'w':
         querry = int(input('howmuch> '))
         d.withdraw(querry)
-    if querry == 'stock_buy' or querry == 'sb':
+    elif querry == 'stock_buy' or querry == 'sb':
         querry = int(input('howmany> '))
         d.stock_buy(querry)
-    if querry == 'stock_sell' or querry == 'ss':
+    elif querry == 'stock_sell' or querry == 'ss':
         querry = int(input('howmany> '))
         d.stock_sell(querry)
-    if querry == 'now_samsung' or querry == 'ns':
+    elif querry == 'now_samsung' or querry == 'ns':
         print(f'{d.now_samsung()} KRW')
-    if querry == 'tomorrow_samsung' or 'next_samsung' or querry == 'ts' or querry == 'xs':
+    elif querry == 'tomorrow_samsung' or querry == 'ts':
         print(f'{a.tomorrow_samsung()} KRW')
-    
-    querry = ''
+   
