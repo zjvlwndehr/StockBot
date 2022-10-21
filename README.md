@@ -1,4 +1,5 @@
 ![header](https://capsule-render.vercel.app/api?text=Hello%World!&fontColor=#A2E9FF&height=300&section=header&text=Stock%20Bot&fontSize=90&animation=fadeIn&fontAlignY=38&desc=[WARNING]%20Just%20For%20Fun.&descAlignY=51&descAlign=62&type=waving)
+![header](https://capsule-render.vercel.app/api?text=Hello%World!&fontColor=d6ace6&desc=[WARNING]%20Just%20For%20Fun.&descAlignY=51&descAlign=62&type=waving)
 
 <center>Stock Bot Command</center>
 <br>
