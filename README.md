@@ -13,3 +13,4 @@
 
 
 ![footer](https://capsule-render.vercel.app/api?text=Hello%World!&fontColor=d6ace6&type=waving)
+![reversal](https://capsule-render.vercel.app/api?type=slice&reversal=true&color=gradient)
