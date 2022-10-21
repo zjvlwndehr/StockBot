@@ -1,5 +1,5 @@
 ![header](https://capsule-render.vercel.app/api?text=Stock%20Bot!&fontColor=d6ace6&type=waving)
-![header](https://capsule-render.vercel.app/api?text=[WARNING]%20Just%20For%20Fun.)
+![header](https://capsule-render.vercel.app/api?text=[WARNING]%20Just%20For%20Fun.&fontColor=#A2E9FF&type=transparent)
 <center>Stock Bot Command</center>
 <br>
 <h2>show, s: show your money</h2>
@@ -11,4 +11,4 @@
 <h2>tomorrow_samsung, next_samsung, ts: show tomorrow samsung stock price</h2>
 
 
-![reversal](https://capsule-render.vercel.app/api?text=Now,%20Have%20Fun%20With%20Bot!&fontSize=70&fontColor=d6ace6&type=slice&reversal=true&color=gradient)
+![reversal](https://capsule-render.vercel.app/api?text=Now,%20Have%20Fun%20With%20Bot!&fontSize=70&fontColor=#FF5675&type=slice&reversal=true&color=gradient)
